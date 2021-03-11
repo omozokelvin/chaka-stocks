@@ -1,0 +1,15 @@
+<div class="row mb-4">
+  <div class="col-md-12">
+    <h2 appSpacedHeader>Market View</h2>
+    <h1>{{pageTitle | sentenceCase}}</h1>
+  </div>
+</div>
+
+<div class="row" id="stocks-grid">
+  <div
+    class="col-lg col-md-3 col-sm-6"
+    *ngFor="let stockSymbol of stockSymbols">
+    <app-stock-highlight [stockSymbol]="stockSymbol"></app-stock-highlight>
+  </div>
+
+</div>
