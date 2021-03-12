@@ -53,23 +53,18 @@
   </div>
 </div>
 
-<div class="row mb-4 pt-3 pb-1 border-top border-bottom">
+<div class="row mb-5 pt-3 pb-1 border-top border-bottom">
   <div class="col-md-12">
     <h2>Earnings</h2>
     <div class="d-flex justify-content-between">
-      <small appMutedText>Symbol</small>
-      <small appMutedText>Company</small>
-      <small appMutedText>Fiscal Period</small>
-      <small appMutedText>Consensus Estimated EPS</small>
-      <small appMutedText>Actual EPS</small>
-      <small appMutedText>Suprise</small>
-      <small appMutedText>EPS, Year Ago</small>
-      <small appMutedText>% Change From Last Year</small>
+      <a class="earning-link" appMutedText *ngFor="let earning of earningList" href="#">
+        {{earning}}
+      </a>
     </div>
   </div>
 </div>
 
-<div class="row pt-3 pb-1 border-top border-bottom">
+<div class="row mt-5 pt-3 pb-1 border-top border-bottom">
   <div class="col-md-12">
     <h2 class="mb-0">Sector Performance</h2>
     <small [appMutedText]="'0.6rem'">{{todaysDate | date:'MMM dd y, hh:mm:SS aaaaa\'m\'' }}.</small>

@@ -18,6 +18,7 @@ import { SentenceCasePipe } from './pipes/sentence-case/sentence-case.pipe';
     CommonModule
   ],
   exports: [
+    CommonModule,
     SpacedHeaderDirective,
     SentenceCasePipe,
     MutedTextDirective,

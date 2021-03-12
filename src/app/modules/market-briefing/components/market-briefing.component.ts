@@ -26,11 +26,6 @@ export class MarketBriefingComponent implements OnInit {
   subTitle: string = `Sector Highlights`;
   todaysDate: Date = new Date();
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
   sectorHighlightList: ISectorHighlight[] = [
     {
       name: 'Health Care',
@@ -102,10 +97,22 @@ export class MarketBriefingComponent implements OnInit {
     }
   ]
 
-  rows() {
-    return this.sectorPerformanceList
-      ? Math.ceil(this.sectorPerformanceList.length / 4)
-      : 0;
+  earningList: string[] = [
+    'Symbol',
+    'Company',
+    'Fiscal Period',
+    'Consensus Estimated EPS',
+    'Actual EPS',
+    'Suprise',
+    'EPS, Year Ago',
+    '% Change From Last Year'
+  ];
+
+  constructor() { }
+
+  ngOnInit(): void {
   }
+
+
 
 }

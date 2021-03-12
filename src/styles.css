@@ -20,6 +20,11 @@ h2 {
   }
 }
 
+a[href*="https://canvasjs.com"]
+{
+  display: none;
+}
+
 /*
 @media (min-width: 992px) {
   .container,

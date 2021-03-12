@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MarketBriefingRoutingModule } from './market-briefing.routing.module';
 import { MarketBriefingComponent } from './components/market-briefing.component';
 import { StockTickerComponent } from './components/stock-ticker/stock-ticker.component';
@@ -10,13 +9,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
 @NgModule({
   declarations: [
     MarketBriefingComponent,
-    // StockHighlightsComponent,
     StockTickerComponent,
     SectorTickerComponent,
     WatchListComponent
   ],
   imports: [
-    CommonModule,
     SharedModule,
     MarketBriefingRoutingModule
   ]

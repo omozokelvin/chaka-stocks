@@ -2,10 +2,15 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
+  // {
+  //   path: '',
+  //   loadChildren: () => import('./modules/market-briefing/market-briefing.module')
+  //     .then(m => m.MarketBriefingModule)
+  // },
   {
     path: '',
-    loadChildren: () => import('./modules/market-briefing/market-briefing.module')
-      .then(m => m.MarketBriefingModule)
+    loadChildren: () => import('./modules/stock-details/stock-details.module')
+      .then(m => m.StockDetailsModule)
   }
 ];
 

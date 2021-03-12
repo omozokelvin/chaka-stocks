@@ -6,3 +6,7 @@ img {
 #blue-image {
   width: 15px;
 }
+
+small {
+  font-size: 1rem;
+}

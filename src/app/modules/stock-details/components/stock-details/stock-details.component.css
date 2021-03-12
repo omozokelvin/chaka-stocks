@@ -1,0 +1,12 @@
+.stock-price {
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+.stock-price span {
+  font-size: 1.2rem;
+}
+
+img {
+  width: 1.5rem;
+}
