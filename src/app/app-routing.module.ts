@@ -1,9 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MarketBriefingComponent } from './components/market-briefing/market-briefing.component';
 
 const routes: Routes = [
-  { path: '', component: MarketBriefingComponent },
+  {
+    path: '',
+    loadChildren: () => import('./modules/market-briefing/market-briefing.module')
+      .then(m => m.MarketBriefingModule)
+  }
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 export interface IStockSymbol {
   symbol: string,
-  description: string,
+  name: string,
   price: number,
   changePercent: number,
   isPositive: boolean

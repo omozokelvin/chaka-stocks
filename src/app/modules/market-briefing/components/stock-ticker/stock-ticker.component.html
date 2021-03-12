@@ -1,0 +1,25 @@
+<ng-template #loadingTemplate>
+  <div [ngSwitch]="isLoading"
+    class="loading-template d-flex justify-content-center align-item-center">
+    <img *ngSwitchCase="true" class="w-25" src="/assets/images/icons/loading.svg">
+
+
+    <div class="align-self-center text-center" *ngSwitchDefault>
+      <img class="w-25" src="/assets/images/icons/empty.svg">
+      <p class="p-2" [appMutedText]="'0.7rem'">{{errorText}}</p>
+    </div>
+  </div>
+</ng-template>
+
+<div #stockCard *ngIf="!isLoading && this.stockInformation; else loadingTemplate" class="card">
+  <div class="card-body">
+    <h4 class="card-title font-weight-bold mb-0">{{stockInformation?.symbol | uppercase}}</h4>
+    <!-- <span class="card-text">Fuelcell Energy Inc</span> -->
+    <span class="card-text">{{stockInformation?.name}}</span>
+  </div>
+  <div class="card-footer">
+    <h4 class="text-right font-weight-bold mb-0">{{stockInformation?.price | number:'1.2-3'}}</h4>
+    <h5 class="text-right" [ngClass]="{'text-success': stockInformation?.isPositive, 'text-danger': !stockInformation?.isPositive}">{{stockInformation?.changePercent | formatPercent:'1.2-3'}}
+    </h5>
+  </div>
+</div>

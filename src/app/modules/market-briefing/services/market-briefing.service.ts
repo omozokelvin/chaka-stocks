@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators'
-import { IStockSymbol } from '../interfaces/stock-symbol.interface';
+import { map, take } from 'rxjs/operators'
+import { IStockSymbol } from 'src/app/shared/interfaces/stock-symbol.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,7 @@ export class MarketBriefingService {
   API_URL = environment.API_URL;
   API_KEY = environment.API_KEY;
 
+
   constructor(
     private http: HttpClient
   ) { }
@@ -20,11 +21,15 @@ export class MarketBriefingService {
 
   getStockName(stockSymbol: string) {
     const queryParams = `?function=OVERVIEW&symbol=${stockSymbol}&apikey=`;
-    return this.http.get<any>(this.API_URL + queryParams + this.API_KEY)
-      .pipe(map((stockData: any) => {
 
-        console.log(stockData);
-      }))
+    return new Promise((resolve) => {
+      this.http.get<any>(this.API_URL + queryParams + this.API_KEY).pipe(
+        take(1)
+      ).subscribe(
+        (stockData: any) => {
+          resolve(stockData.Name as string);
+        })
+    })
   }
 
   getStockInfo(stockSymbol: string) {
@@ -32,7 +37,7 @@ export class MarketBriefingService {
     const queryParams = `?function=GLOBAL_QUOTE&symbol=${stockSymbol}&apikey=`;
 
     return this.http.get<any>(this.API_URL + queryParams + this.API_KEY)
-      .pipe(map((stockData: any) => {
+      .pipe(map(async (stockData: any) => {
 
         //destructure stock data, key is a string
         const { ['Global Quote']: globalQuote } = stockData;
@@ -51,47 +56,25 @@ export class MarketBriefingService {
         //determine if it's positive using the first character of the change percent
         const isPositive: boolean = changePercent.charAt(0) === '+' ? true : false;
 
-        //slice out the beginning symbol (i.e. +) and ending symbol (i.e %)
-        changePercent = changePercent.substring(1).slice(0, -1);
+        //slice out the ending symbol (i.e %)
+        changePercent = changePercent.slice(0, -1);
         changePercent = Number.parseFloat(changePercent);
 
+        //we retrieve the name using the symbol;
+        const name: string = await this.getStockName(symbol) as string;
 
-        //we retrieve the description using the symbol;
-        this.getStockName(symbol);
-
-        const processedStock: Partial<IStockSymbol> = {
+        //we fill the partial processed stock because we haven't gotten the name yet
+        const processedStock: IStockSymbol = {
           symbol,
+          name,
           price,
           changePercent,
           isPositive
         }
 
-        console.log(processedStock);
-
         return processedStock;
 
-        // return {
-        //   posts: postData.posts.map(post => {
-        //     return {
-        //       title: post.title,
-        //       content: post.content,
-        //       id: post._id,
-        //       imagePath: post.imagePath,
-        //       creator: post.creator
-        //     };
-        //   }), maxPosts: postData.maxPosts
-        // };
-
-        return {};
       }))
-      .subscribe((transformStock: any) => {
-        console.log(transformStock);
-        // this.posts = transformedPostData.posts;
-        // this.postsUpdated.next({
-        //   posts: [...this.posts],
-        //   postCount: transformedPostData.maxPosts
-        // });
-      });
   }
 
 }

@@ -1,0 +1,10 @@
+<div class="d-flex flex-column justify-content-between h-100 wrapper" [ngStyle]="{'background-image': getImageUrl()}">
+  <h3 class="text-light">{{sectorTicker.name}}</h3>
+  <div
+    class="text-right border-none">
+    <span class="badge"
+      [ngClass]="getNumberHighlightClass()">
+      {{sectorTicker.changePercent | formatPercent}}
+    </span>
+  </div>
+</div>

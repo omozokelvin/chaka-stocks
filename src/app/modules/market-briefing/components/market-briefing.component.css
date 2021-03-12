@@ -1,0 +1,32 @@
+.stocks-grid {
+  padding: 0.3rem;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid-item {
+  flex-grow: 1;
+  min-width: 25%;
+  padding: 0.3rem;
+}
+
+@media (max-width: 992px) {
+  .grid-item {
+    min-width: 33.33%;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-item {
+    min-width: 50%;
+  }
+}
+
+@media (max-width: 576px) {
+  .grid-item {
+    min-width: 100%;
+  }
+}
