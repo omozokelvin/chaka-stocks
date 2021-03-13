@@ -10,15 +10,15 @@ export class MarketBriefingComponent implements OnInit {
 
   stockSymbols: string[] = [
     'bngo',
-    'APPL',
-    'INTC',
-    'GEVO',
-    'FCEL',
-    'SNAP',
-    'AAL',
-    'OCGN',
-    'PLTR',
-    'GE'
+    // 'APPL',
+    // 'INTC',
+    // 'GEVO',
+    // 'FCEL',
+    // 'SNAP',
+    // 'AAL',
+    // 'OCGN',
+    // 'PLTR',
+    // 'GE'
   ];
 
   //todo: sentence case pipe

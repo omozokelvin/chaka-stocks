@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { IStockSymbol } from 'src/app/shared/interfaces/stock-symbol.interface';
+import { IGlobalQuote } from 'src/app/shared/interfaces/global-quote.interface';
 import { MarketBriefingService } from '../../services/market-briefing.service';
 
 @Component({
@@ -12,8 +12,7 @@ export class StockTickerComponent implements OnInit {
 
   @Input('stockSymbol') stockSymbol: string = '';
 
-  stockInformation!: IStockSymbol;
-  symbol: string = '';
+  stockInformation!: Partial<IGlobalQuote>;
   errorText: string = '';
 
   isLoading: boolean = false;
@@ -23,27 +22,59 @@ export class StockTickerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+
+    this.marketBriefingService
+      .getStockOverview(this.stockSymbol)
+      .subscribe(response => {
+        console.log(response);
+      });
+
+    this.getStockInformation();
+
+  }
+
+  getStockInformation() {
     this.isLoading = true;
+    this.stockInformation = {};
+    this.errorText = '';
 
-    this.marketBriefingService.getStockInfo(this.stockSymbol)
-      .subscribe(async (response) => {
+    this.marketBriefingService.getGlobalQuote(this.stockSymbol)
+      .subscribe((response: IGlobalQuote | null) => {
+        this.isLoading = false;
 
-        try {
-          this.isLoading = false;
-          this.stockInformation = await response as IStockSymbol;
+        this.stockInformation = response as IGlobalQuote;
 
-          this.symbol = this.stockInformation.isPositive ? '+' : '-';
-
-        } catch(error) {
-          //handle application specific error here;
-          this.errorText = `Could not fetch data for ${this.stockSymbol.toUpperCase()}, premium subscription required`;
-        }
+        console.log(this.stockInformation);
 
       }, (error: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorText = `Could not fetch data for ${this.stockSymbol.toUpperCase()}, premium subscription required`;
+        this.errorText = `Could not fetch data for ${this.stockSymbol.toUpperCase()}`;
         console.log('error occurred');
       });
+  }
+
+
+  getTextClass(changePercent: number): string {
+
+    let textClass = '';
+
+    switch(Math.sign(changePercent)) {
+      case 1:
+        textClass = 'text-success'
+        break;
+
+      case -1:
+        textClass = 'text-danger';
+        break;
+
+      default:
+        textClass = 'text-secondary'
+        break;
+
+    }
+
+    return textClass;
   }
 
 }

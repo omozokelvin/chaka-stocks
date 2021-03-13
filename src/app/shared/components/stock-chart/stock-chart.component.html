@@ -1,0 +1,17 @@
+<div [ngStyle]="{'height': height}" *ngIf="showLoading">
+  <app-loading></app-loading>
+</div>
+
+<div
+  [hidden]="showLoading"
+  [ngStyle]="{
+  'border-bottom':showBottomBorder ? 
+  '1px dashed #67c196' : 
+  'none'
+}">
+  <div
+    class="chartContainer"
+    [ngStyle]="{'height': height}">
+    <canvas #chartDiv></canvas>
+  </div>
+</div>

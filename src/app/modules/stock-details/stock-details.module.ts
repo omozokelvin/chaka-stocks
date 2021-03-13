@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { StockDetailsRoutingModule } from './stock-details.routing.module';
 import { StockDetailsComponent } from './components/stock-details/stock-details.component';
-import { StockChartComponent } from './components/stock-details/stock-chart/stock-chart.component';
+import { StockDetailsChartsComponent } from './components/stock-details/stock-details-charts/stock-details-charts.component';
 
 @NgModule({
   declarations: [
     StockDetailsComponent,
-    StockChartComponent
+    StockDetailsChartsComponent
   ],
   imports: [
     SharedModule,

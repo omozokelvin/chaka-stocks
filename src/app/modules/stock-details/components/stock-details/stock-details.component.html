@@ -1,4 +1,5 @@
-<div class="row mb-3 d-flex justify-content-between align-items-center">
+<div class="row mb-4 d-flex justify-content-between align-items-center">
+
   <div>
     <h2>Bionano Genomics Inc. <span class="font-weight-normal">(BNGO)</span></h2>
     <h3 class="stock-price mb-0">1.36 <span class="text-success font-weight-normal">+0.46(+53.81%)</span></h3>
@@ -7,18 +8,45 @@
   <div>
     <img src="/assets/images/icons/star-blue-outline.png">
   </div>
+
 </div>
 
-<div class="row text-right">
-  <div class="col-md-12">
+<div class="row mb-5 text-right">
+  <div class="col">
     <small [appMutedText]="'0.7rem'">Previous Close</small>
     <br>
     <strong>0.884</strong>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-    <app-stock-chart></app-stock-chart>
+<div class="row mb-5">
+  <div class="col-12">
+    <app-stock-details-charts [stockSymbol]="stockSymbol"></app-stock-details-charts>
   </div>
+</div>
+
+<div class="row">
+
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Profile</h2>
+        ...
+      </div>
+    </div>
+
+    <div class="row border-top">
+      <div class="col-md-12">
+        <app-information-list
+          [infoList]="profileData.slice(0,7)"></app-information-list>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 border-top">
+    <app-information-list
+      [infoList]="profileData.slice(7,profileData.length)"
+      [columns]="3"></app-information-list>
+  </div>
+
 </div>

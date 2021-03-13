@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map, take } from 'rxjs/operators'
-import { IStockSymbol } from 'src/app/shared/interfaces/stock-symbol.interface';
+import { IGlobalQuote } from 'src/app/shared/interfaces/global-quote.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,62 +18,72 @@ export class MarketBriefingService {
     private http: HttpClient
   ) { }
 
-
-  getStockName(stockSymbol: string) {
+  getStockOverview(stockSymbol: string) {
+    stockSymbol = 'IBM';
     const queryParams = `?function=OVERVIEW&symbol=${stockSymbol}&apikey=`;
+    return this.http.get<IStockOverview>(this.API_URL + queryParams + this.API_KEY)
+      .pipe(map((stockOverView) => {
 
-    return new Promise((resolve) => {
-      this.http.get<any>(this.API_URL + queryParams + this.API_KEY).pipe(
-        take(1)
-      ).subscribe(
-        (stockData: any) => {
-          resolve(stockData.Name as string);
-        })
-    })
+        return stockOverView;
+      }))
   }
 
-  getStockInfo(stockSymbol: string) {
+  private extractGlobalQuote(rawGlobalQuote: any): IGlobalQuote {
+    // destructure globalQuote to get needed data
+    let {
+      ['01. symbol']: symbol,
+      ['02. open']: open,
+      ['03. high']: high,
+      ['04. low']: low,
+      ['05. price']: price,
+      ['06. volume']: volume,
+      ['07. latest trading day']: date,
+      ['08. previous close']: previousClose,
+      ['09. change']: change,
+      ['10. change percent']: changePercent
+
+    } = rawGlobalQuote;
+
+    // slice out the ending symbol (i.e %) for change % if it's there
+    const changePercentLastChar = changePercent.slice(changePercent.length - 1);
+
+    if(changePercentLastChar === '%') {
+      changePercent = changePercent.slice(0, -1);
+    }
+
+    const processedGlobalQuote: IGlobalQuote = {
+      symbol,
+      open: Number.parseFloat(open),
+      high: Number.parseFloat(high),
+      low: Number.parseFloat(low),
+      price: Number.parseFloat(price),
+      volume: Number.parseInt(volume),
+      latestTradingDay: new Date(date),
+      previousClose: Number.parseFloat(previousClose),
+      change: Number.parseFloat(change),
+      changePercent: Number.parseFloat(changePercent)
+
+    };
+
+    return processedGlobalQuote;
+  }
+
+  getGlobalQuote(stockSymbol: string) {
     stockSymbol = 'IBM';
     const queryParams = `?function=GLOBAL_QUOTE&symbol=${stockSymbol}&apikey=`;
 
-    return this.http.get<any>(this.API_URL + queryParams + this.API_KEY)
-      .pipe(map(async (stockData: any) => {
+    return this.http.get<IGlobalQuote | null>(this.API_URL + queryParams + this.API_KEY)
+      .pipe(map((stockData: any) => {
+        try {
+          //destructure stock data, key is a string
+          const { ['Global Quote']: rawGlobalQuote } = stockData;
 
-        //destructure stock data, key is a string
-        const { ['Global Quote']: globalQuote } = stockData;
+          const processedGlobalQuote: IGlobalQuote = this.extractGlobalQuote(rawGlobalQuote)
 
-        //destructure globalQuote data to get symbol, price, changePercent;
-        //decide isPositive;
-        let {
-          ['01. symbol']: symbol,
-          ['05. price']: price,
-          ['10. change percent']: changePercent
-
-        } = globalQuote;
-
-        price = Number.parseFloat(price);
-
-        //determine if it's positive using the first character of the change percent
-        const isPositive: boolean = changePercent.charAt(0) === '+' ? true : false;
-
-        //slice out the ending symbol (i.e %)
-        changePercent = changePercent.slice(0, -1);
-        changePercent = Number.parseFloat(changePercent);
-
-        //we retrieve the name using the symbol;
-        const name: string = await this.getStockName(symbol) as string;
-
-        //we fill the partial processed stock because we haven't gotten the name yet
-        const processedStock: IStockSymbol = {
-          symbol,
-          name,
-          price,
-          changePercent,
-          isPositive
+          return processedGlobalQuote;
+        } catch(error) {
+          return null;
         }
-
-        return processedStock;
-
       }))
   }
 

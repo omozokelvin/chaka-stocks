@@ -5,6 +5,10 @@ import { SoftBoxShadowDirective } from './directives/soft-box-shadow/soft-box-sh
 import { SpacedHeaderDirective } from './directives/spaced-header/spaced-header.directive';
 import { FormatPercentPipe } from './pipes/format-percent/format-percent.pipe';
 import { SentenceCasePipe } from './pipes/sentence-case/sentence-case.pipe';
+import { LoadingComponent } from './components/loading/loading.component';
+import { StockChartComponent } from './components/stock-chart/stock-chart.component';
+import { InformationListComponent } from './components/information-list/information-list.component';
+import { NumberPrefixPipe } from './pipes/number-prefix.pipe';
 
 @NgModule({
   declarations: [
@@ -12,7 +16,11 @@ import { SentenceCasePipe } from './pipes/sentence-case/sentence-case.pipe';
     SentenceCasePipe,
     MutedTextDirective,
     FormatPercentPipe,
-    SoftBoxShadowDirective
+    SoftBoxShadowDirective,
+    LoadingComponent,
+    StockChartComponent,
+    InformationListComponent,
+    NumberPrefixPipe
   ],
   imports: [
     CommonModule
@@ -23,7 +31,12 @@ import { SentenceCasePipe } from './pipes/sentence-case/sentence-case.pipe';
     SentenceCasePipe,
     MutedTextDirective,
     FormatPercentPipe,
-    SoftBoxShadowDirective
-  ]
+    SoftBoxShadowDirective,
+    LoadingComponent,
+    StockChartComponent,
+    InformationListComponent,
+    NumberPrefixPipe
+  ],
+  providers: [NumberPrefixPipe]
 })
 export class SharedModule { }

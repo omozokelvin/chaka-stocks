@@ -1,0 +1,38 @@
+<div class="row mb-5">
+  <div class="col">
+    <app-stock-chart
+      #firstChartElement
+      [stockSymbol]="stockSymbol"
+      [showBottomBorder]="true">
+    </app-stock-chart>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <app-stock-chart
+      #secondChartElement
+      [stockSymbol]="stockSymbol"
+      [chartType]="'bar'"
+      (stockDataEmitter)="stockDataListener($event)">
+    </app-stock-chart>
+  </div>
+</div>
+
+
+<nav *ngIf="showNavbar" class="navbar justify-content-between navbar-light bg-light">
+  <ul class="nav navbar-nav flex-row">
+    <li
+      class="nav-item"
+      *ngFor="let range of rangeList; let i = index"
+      [ngClass]="{'active': activeIndex === i}"
+      (click)="onNavItemClick(i)">
+      <a class="nav-link">{{range}}</a>
+    </li>
+  </ul>
+  <div>
+    <button class="btn btn-sm"><img src="/assets/images/icons/square.svg">Peers</button>
+    <button class="btn btn-sm" (click)="downloadCSV()"><img src="/assets/images/icons/download.svg">CSV</button>
+  </div>
+  <!-- </div> -->
+</nav>
