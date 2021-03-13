@@ -56,11 +56,23 @@
 <div class="row mb-5 pt-3 pb-1 border-top border-bottom">
   <div class="col-md-12">
     <h2>Earnings</h2>
+
+    <nav class="navbar justify-content-between navbar-light">
+      <ul class="nav navbar-nav flex-row">
+        <li
+          class="nav-item"
+          *ngFor="let earning of earningList">
+          <a class="nav-link">{{earning}}</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- 
     <div class="d-flex justify-content-between">
       <a class="earning-link" appMutedText *ngFor="let earning of earningList" href="#">
         {{earning}}
       </a>
-    </div>
+    </div> -->
   </div>
 </div>
 

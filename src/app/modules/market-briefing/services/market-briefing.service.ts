@@ -1,8 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { map, take } from 'rxjs/operators'
+import { map } from 'rxjs/operators'
 import { IGlobalQuote } from 'src/app/shared/interfaces/global-quote.interface';
+import dataSanitizer from 'src/app/shared/utils/DataSanitizer';
+import { forkJoin } from 'rxjs';
+import { IAllStockInfo } from 'src/app/shared/interfaces/all-stock-info';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +25,8 @@ export class MarketBriefingService {
     stockSymbol = 'IBM';
     const queryParams = `?function=OVERVIEW&symbol=${stockSymbol}&apikey=`;
     return this.http.get<IStockOverview>(this.API_URL + queryParams + this.API_KEY)
-      .pipe(map((stockOverView) => {
-
-        return stockOverView;
+      .pipe(map((stockOverview: any) => {
+        return dataSanitizer(stockOverview);
       }))
   }
 
@@ -37,7 +39,7 @@ export class MarketBriefingService {
       ['04. low']: low,
       ['05. price']: price,
       ['06. volume']: volume,
-      ['07. latest trading day']: date,
+      ['07. latest trading day']: latestTradingDay,
       ['08. previous close']: previousClose,
       ['09. change']: change,
       ['10. change percent']: changePercent
@@ -53,19 +55,19 @@ export class MarketBriefingService {
 
     const processedGlobalQuote: IGlobalQuote = {
       symbol,
-      open: Number.parseFloat(open),
-      high: Number.parseFloat(high),
-      low: Number.parseFloat(low),
-      price: Number.parseFloat(price),
-      volume: Number.parseInt(volume),
-      latestTradingDay: new Date(date),
-      previousClose: Number.parseFloat(previousClose),
-      change: Number.parseFloat(change),
-      changePercent: Number.parseFloat(changePercent)
+      open,
+      high,
+      low,
+      price,
+      volume,
+      latestTradingDay,
+      previousClose,
+      change,
+      changePercent
 
     };
 
-    return processedGlobalQuote;
+    return dataSanitizer(processedGlobalQuote);
   }
 
   getGlobalQuote(stockSymbol: string) {
@@ -74,17 +76,30 @@ export class MarketBriefingService {
 
     return this.http.get<IGlobalQuote | null>(this.API_URL + queryParams + this.API_KEY)
       .pipe(map((stockData: any) => {
-        try {
-          //destructure stock data, key is a string
-          const { ['Global Quote']: rawGlobalQuote } = stockData;
 
-          const processedGlobalQuote: IGlobalQuote = this.extractGlobalQuote(rawGlobalQuote)
+        //destructure stock data, key is a string
+        const { ['Global Quote']: rawGlobalQuote } = stockData;
 
-          return processedGlobalQuote;
-        } catch(error) {
-          return null;
-        }
+        const processedGlobalQuote: IGlobalQuote = this.extractGlobalQuote(rawGlobalQuote)
+
+        return processedGlobalQuote;
+
       }))
+  }
+
+  getAllStockInfo(stockSymbol: string) {
+    return forkJoin(
+      this.getGlobalQuote(stockSymbol),
+      this.getStockOverview(stockSymbol)
+    ).pipe(map(([globalQuote, stockOverview]) => {
+
+      const stockInfo: IAllStockInfo = {
+        globalQuote,
+        stockOverview
+      }
+
+      return stockInfo;
+    }))
   }
 
 }

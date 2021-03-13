@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { IGlobalQuote } from 'src/app/shared/interfaces/global-quote.interface';
+import { Router } from '@angular/router';
+import { IAllStockInfo } from 'src/app/shared/interfaces/all-stock-info';
 import { MarketBriefingService } from '../../services/market-briefing.service';
 
 @Component({
@@ -12,23 +13,17 @@ export class StockTickerComponent implements OnInit {
 
   @Input('stockSymbol') stockSymbol: string = '';
 
-  stockInformation!: Partial<IGlobalQuote>;
+  stockInformation!: Partial<IAllStockInfo>;
   errorText: string = '';
 
   isLoading: boolean = false;
 
   constructor(
-    private marketBriefingService: MarketBriefingService
+    private marketBriefingService: MarketBriefingService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-
-
-    this.marketBriefingService
-      .getStockOverview(this.stockSymbol)
-      .subscribe(response => {
-        console.log(response);
-      });
 
     this.getStockInformation();
 
@@ -39,13 +34,11 @@ export class StockTickerComponent implements OnInit {
     this.stockInformation = {};
     this.errorText = '';
 
-    this.marketBriefingService.getGlobalQuote(this.stockSymbol)
-      .subscribe((response: IGlobalQuote | null) => {
+    this.marketBriefingService.getAllStockInfo(this.stockSymbol)
+      .subscribe((response: IAllStockInfo) => {
         this.isLoading = false;
 
-        this.stockInformation = response as IGlobalQuote;
-
-        console.log(this.stockInformation);
+        this.stockInformation = response;
 
       }, (error: HttpErrorResponse) => {
         this.isLoading = false;
@@ -77,4 +70,8 @@ export class StockTickerComponent implements OnInit {
     return textClass;
   }
 
+  onStockClick() {
+    // console.log(this.stockSymbol);
+    this.router.navigate(['stock-details']);
+  }
 }

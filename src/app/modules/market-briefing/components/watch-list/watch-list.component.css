@@ -10,3 +10,21 @@ img {
 small {
   font-size: 1rem;
 }
+
+@media (max-width: 992px) {
+  small {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  small {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  small {
+    font-size: 0.7rem;
+  }
+}

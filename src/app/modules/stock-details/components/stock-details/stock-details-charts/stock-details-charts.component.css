@@ -12,6 +12,10 @@ ul li.nav-item {
   padding-bottom: 0;
 }
 
+ul li.nav-item:last-child {
+  margin-right: 0;
+}
+
 li.active {
   border-bottom: 2px solid black;
   font-weight: bold;
@@ -62,7 +66,7 @@ button:last-child {
     margin-right: 0.3rem;
   }
 
-  button {
+  button:first-child {
     margin-right: 0.6rem;
   }
 }

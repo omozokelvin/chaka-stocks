@@ -7,15 +7,22 @@
   </div>
 </ng-template>
 
-<div #stockCard *ngIf="!isLoading && this.stockInformation; else loadingTemplate" class="card">
+<div
+  *ngIf="!isLoading && this.stockInformation; 
+else loadingTemplate"
+  class="card"
+  (click)="onStockClick()">
   <div class="card-body">
-    <h4 class="card-title font-weight-bold mb-0">{{stockInformation?.symbol | uppercase}}</h4>
+    <h4 class="card-title font-weight-bold mb-0">{{stockInformation?.globalQuote?.symbol | uppercase}}</h4>
     <!-- <span class="card-text">Fuelcell Energy Inc</span> -->
-    <!-- <span class="card-text">{{stockInformation?.name}}</span> -->
+    <span class="card-text">{{stockInformation?.stockOverview?.Name}}</span>
   </div>
   <div class="card-footer">
-    <h4 class="text-right font-weight-bold mb-0">{{stockInformation?.price | number:'1.2-3'}}</h4>
-    <h5 class="text-right" [ngClass]="getTextClass(stockInformation?.changePercent)">{{stockInformation?.changePercent | formatPercent:'1.2-3'}}
+    <h4 class="text-right font-weight-bold mb-0">{{stockInformation?.globalQuote?.price | number:'1.2-3'}}</h4>
+    <h5
+      class="text-right"
+      [ngClass]="getTextClass(stockInformation?.globalQuote?.changePercent)">
+      {{stockInformation?.globalQuote?.changePercent | formatPercent:'1.2-3'}}
     </h5>
   </div>
 </div>

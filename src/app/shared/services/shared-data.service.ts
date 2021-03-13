@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { IStockChartData, IStockMetadata, ITimeSeries } from 'src/app/shared/interfaces/stock-chart-data.interface';
 import { environment } from 'src/environments/environment';
+import dataSanitizer from '../utils/DataSanitizer';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class SharedDataService {
       timeZone
     };
 
-    return processedMetaData;
+    return dataSanitizer(processedMetaData);
   }
 
   private extractDailyTimeSeries(rawDailyTimeSeries: any) {
@@ -56,14 +57,14 @@ export class SharedDataService {
         ['5. volume']: volume,
       } = currentValue;
 
-      const timeSeries: ITimeSeries = {
+      const timeSeries: ITimeSeries = dataSanitizer({
         date,
-        open: Number.parseFloat(open),
-        high: Number.parseFloat(high),
-        low: Number.parseFloat(low),
-        close: Number.parseFloat(close),
-        volume: Number.parseInt(volume),
-      };
+        open,
+        high,
+        low,
+        close,
+        volume,
+      });
 
       dailyTimeSeriesList.push(timeSeries);
     }

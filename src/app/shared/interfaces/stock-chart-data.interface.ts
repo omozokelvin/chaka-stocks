@@ -8,7 +8,7 @@ export interface IStockMetadata {
 }
 
 export interface ITimeSeries {
-  date?: string,
+  date?: Date,
   open: number,
   high: number,
   low: number,

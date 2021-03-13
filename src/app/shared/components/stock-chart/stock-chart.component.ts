@@ -58,7 +58,7 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
     const closeValues: number[] = [];
 
     dailyTimeSeries.forEach(element => {
-      labelData.push(element.date as string);
+      labelData.push(element.date?.toDateString() as string);
       openValues.push(element.open);
       highValues.push(element.high);
       lowValues.push(element.low);
