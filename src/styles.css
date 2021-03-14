@@ -16,7 +16,7 @@ h2 {
 @media (min-width: 1200px) {
   .container {
     max-width: 70vw;
-    border: 1px solid red;
+    /* border: 1px solid red; */
   }
 }
 
