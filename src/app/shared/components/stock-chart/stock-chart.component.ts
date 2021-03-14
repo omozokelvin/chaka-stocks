@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular
 import { Chart, ChartType } from 'chart.js';
 import { IStockChartData } from 'src/app/shared/interfaces/stock-chart-data.interface';
 import { HttpService } from '../../http/http-service.service';
-import { SharedDataService } from '../../services/shared-data.service';
+import { SharedDataService } from '../../services/shared-data/shared-data.service';
 import { AsyncInitializedComponent } from '../../utils/AsyncInitialized';
 
 @Component({
@@ -92,6 +92,8 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
     const highValues: number[] = [];
     const lowValues: number[] = [];
     const closeValues: number[] = [];
+
+    console.log(dailyTimeSeries);
 
     dailyTimeSeries.forEach(element => {
       labelData.push(element.date?.toDateString() as string);
@@ -226,10 +228,6 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
     });
 
     this.doneLoading();
-  }
-
-  ngOnDestroy(): void {
-    this.stockChart.destroy();
   }
 }
 

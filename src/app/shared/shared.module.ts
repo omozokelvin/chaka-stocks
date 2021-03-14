@@ -12,7 +12,6 @@ import { NumberPrefixPipe } from './pipes/number-prefix/number-prefix.pipe';
 import { QuarterlyDatePipe } from './pipes/quarterly-date/quarterly-date.pipe';
 import { EmptyDataComponent } from './components/empty-data/empty-data.component';
 
-
 @NgModule({
   declarations: [
     SpacedHeaderDirective,

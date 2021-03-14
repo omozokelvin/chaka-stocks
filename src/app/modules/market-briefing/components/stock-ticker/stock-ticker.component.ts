@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from 'src/app/shared/http/http-service.service';
 import { IAllStockInfo } from 'src/app/shared/interfaces/all-stock-info';
+import { LocalStorageService } from 'src/app/shared/services/local-storage/local-storage.service';
 @Component({
   selector: 'app-stock-ticker',
   templateUrl: './stock-ticker.component.html',
@@ -23,9 +24,7 @@ export class StockTickerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.getStockInformation();
-
   }
 
   getStockInformation() {

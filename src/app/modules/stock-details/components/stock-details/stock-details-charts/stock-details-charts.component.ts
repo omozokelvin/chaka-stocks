@@ -3,7 +3,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { zip } from 'rxjs';
 import { HttpService } from 'src/app/shared/http/http-service.service';
 import { IStockChartData } from 'src/app/shared/interfaces/stock-chart-data.interface';
-import { SharedDataService } from 'src/app/shared/services/shared-data.service';
+import { SharedDataService } from 'src/app/shared/services/shared-data/shared-data.service';
 
 @Component({
   selector: 'app-stock-details-charts',

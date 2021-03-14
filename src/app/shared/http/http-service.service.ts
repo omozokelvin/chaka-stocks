@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AsyncSubject, forkJoin, Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IAllStockInfo } from '../interfaces/all-stock-info';
 import { IGlobalQuote } from '../interfaces/global-quote.interface';
@@ -10,6 +10,7 @@ import { IStockOverview } from '../interfaces/stock-overview.interface';
 import dataSanitizer from '../utils/dataSanitizer';
 import * as moment from 'node_modules/moment';
 import { RangeListEnum } from '../enumerations/RangeListEnum';
+import { LocalStorageService } from '../services/local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +21,17 @@ export class HttpService {
   API_KEY = environment.API_KEY;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private localStorageService: LocalStorageService
   ) { }
 
   getStockOverview(stockSymbol: string) {
-    stockSymbol = 'IBM';
+
+    const storageName = `STOCK_OVERVIEW_${stockSymbol}`;
+
+    if(this.localStorageService.get(storageName)) {
+      return of(this.localStorageService.get(storageName)) as Observable<IStockOverview>;
+    }
 
     let params = new HttpParams();
 
@@ -34,7 +41,12 @@ export class HttpService {
 
     return this.http.get<Observable<IStockOverview>>(this.API_URL, { params })
       .pipe(map((stockOverview: any) => {
-        return dataSanitizer(stockOverview);
+
+        const processStockOverview = dataSanitizer(stockOverview);
+
+        !!processStockOverview.Symbol && this.localStorageService.set(storageName, processStockOverview);
+
+        return processStockOverview;
       }))
   }
 
@@ -79,7 +91,11 @@ export class HttpService {
   }
 
   getGlobalQuote(stockSymbol: string) {
-    stockSymbol = 'IBM';
+    const storageName = `GLOBAL_QUOTE_${stockSymbol}`;
+
+    if(this.localStorageService.get(storageName)) {
+      return of(this.localStorageService.get(storageName)) as Observable<IGlobalQuote>;
+    }
 
     let params = new HttpParams();
 
@@ -93,15 +109,18 @@ export class HttpService {
         //destructure stock data, key is a string
         const { ['Global Quote']: rawGlobalQuote } = stockData;
 
-        const processedGlobalQuote: IGlobalQuote = this.extractGlobalQuote(rawGlobalQuote)
+        const processedGlobalQuote: IGlobalQuote = this.extractGlobalQuote(rawGlobalQuote);
+
+        this.localStorageService.set(storageName, processedGlobalQuote);
 
         return processedGlobalQuote;
 
       }))
   }
 
-  getAllStockInfo(stockSymbol: string) {
-    return forkJoin(
+  getAllStockInfo(stockSymbol: string): Observable<IAllStockInfo> {
+
+    return combineLatest(
       this.getGlobalQuote(stockSymbol),
       this.getStockOverview(stockSymbol)
     ).pipe(map(([globalQuote, stockOverview]) => {
@@ -232,14 +251,8 @@ export class HttpService {
     return dailyTimeSeriesList;
   }
 
-
-  //  private subject = new AsyncSubject();
-
-  private dataSubject = new AsyncSubject();
-
-
   getStockTimeSeries(stockSymbol: string, range?: string) {
-    stockSymbol = 'IBM';
+    // stockSymbol = environment.production ? stockSymbol : 'IBM';
 
     let params = new HttpParams();
 
@@ -267,6 +280,7 @@ export class HttpService {
               dailyTimeSeries
             }
 
+
             return processedTimeSeries;
           } catch(error) {
             return null;
@@ -275,7 +289,7 @@ export class HttpService {
   }
 
   downloadStockTimeSeries(stockSymbol: string) {
-    stockSymbol = 'IBM';
+    // stockSymbol = environment.production ? stockSymbol : 'IBM';
 
     let params = new HttpParams();
 

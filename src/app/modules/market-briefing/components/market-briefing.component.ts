@@ -8,17 +8,29 @@ import { ISectorHighlight } from 'src/app/shared/interfaces/sector-highlight.int
 })
 export class MarketBriefingComponent implements OnInit {
 
+  // stockSymbols: string[] = [
+  //   'bngo',
+  //   'APPL',
+  //   'INTC',
+  //   'GEVO',
+  //   'FCEL',
+  //   'SNAP',
+  //   'AAL',
+  //   'OCGN',
+  //   'PLTR',
+  //   'GE'
+  // ];
   stockSymbols: string[] = [
-    'bngo',
-    'APPL',
-    'INTC',
-    'GEVO',
-    'FCEL',
-    'SNAP',
-    'AAL',
-    'OCGN',
-    'PLTR',
-    'GE'
+    'IBM',
+    'IBM',
+    'IBM',
+    'IBM',
+    'IBM',
+    'IBM',
+    'IBM',
+    'IBM',
+    'IBM',
+    'IBM'
   ];
 
   //todo: sentence case pipe
