@@ -10,6 +10,7 @@ import { StockChartComponent } from './components/stock-chart/stock-chart.compon
 import { InformationListComponent } from './components/information-list/information-list.component';
 import { NumberPrefixPipe } from './pipes/number-prefix/number-prefix.pipe';
 import { QuarterlyDatePipe } from './pipes/quarterly-date/quarterly-date.pipe';
+import { EmptyDataComponent } from './components/empty-data/empty-data.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { QuarterlyDatePipe } from './pipes/quarterly-date/quarterly-date.pipe';
     StockChartComponent,
     InformationListComponent,
     NumberPrefixPipe,
-    QuarterlyDatePipe
+    QuarterlyDatePipe,
+    EmptyDataComponent
   ],
   imports: [
     CommonModule
@@ -39,7 +41,8 @@ import { QuarterlyDatePipe } from './pipes/quarterly-date/quarterly-date.pipe';
     StockChartComponent,
     InformationListComponent,
     NumberPrefixPipe,
-    QuarterlyDatePipe
+    QuarterlyDatePipe,
+    EmptyDataComponent
   ],
   providers: [
     NumberPrefixPipe,

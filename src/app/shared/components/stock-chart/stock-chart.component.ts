@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Chart, ChartType } from 'chart.js';
 import { IStockChartData } from 'src/app/shared/interfaces/stock-chart-data.interface';
+import { HttpService } from '../../http/http-service.service';
 import { SharedDataService } from '../../services/shared-data.service';
 import { AsyncInitializedComponent } from '../../utils/AsyncInitialized';
 
@@ -28,8 +29,18 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
 
   errorText: string = '';
 
-  constructor(private sharedDataService: SharedDataService) {
+  constructor(
+    private httpService: HttpService,
+    private sharedDataService: SharedDataService) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.sharedDataService.rangeUpdated
+      .subscribe((range: string) => {
+        console.log(range);
+        this.fetchTimeSeries(range);
+      })
   }
 
   ngAfterViewInit(): void {
@@ -41,11 +52,13 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
     this.componentLoaded();
   }
 
-  fetchTimeSeries(): void {
+  fetchTimeSeries(range?: string): void {
     this.errorText = '';
+    this.showLoading = true;
+    this.isLoaded = false;
 
-    this.sharedDataService
-      .getStockTimeSeries(this.stockSymbol)
+    this.httpService
+      .getStockTimeSeries(this.stockSymbol, range)
       .subscribe((response: IStockChartData | null) => {
         this.isLoaded = true;
 
@@ -55,15 +68,23 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
           return;
         }
 
-        this.extractChartData(response);
+        if(!response.dailyTimeSeries || !response.dailyTimeSeries.length) {
+          console.log('here');
+          this.doneLoading();
+          this.errorText = 'No data found within date range.';
+          return;
+        }
+
+        this.extractChartData(response, range);
 
       }, (error: HttpErrorResponse) => {
         this.isLoaded = true;
+        this.doneLoading();
         this.errorText = 'Failed to get chart info';
       })
   }
 
-  private extractChartData(response: IStockChartData) {
+  private extractChartData(response: IStockChartData, range?: string) {
     const { dailyTimeSeries } = response;
 
     const labelData: string[] = [];
@@ -153,15 +174,25 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
         break;
     }
 
-    // console.log(dataset);
+    if(!!range) {
+      // this.stockChart.update();
+      this.stockChart.data.datasets = dataset;
+      this.stockChart.data.labels = labelData;
 
-    this.renderChart(labelData, dataset);
+      this.stockChart.update();
+
+      this.doneLoading();
+    } else {
+      this.renderChart(labelData, dataset);
+    }
+
   }
 
   renderChart(labelData: string[], dataSets: Chart.ChartDataSets[]): void {
     Chart.platform.disableCSSInjection = true;
 
     const chartContext = this.chartDiv.nativeElement.getContext('2d');
+
 
     this.stockChart = new Chart(chartContext, {
       type: this.chartType,

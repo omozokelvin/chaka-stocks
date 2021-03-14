@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpService } from 'src/app/shared/http/http-service.service';
 import { IAllStockInfo } from 'src/app/shared/interfaces/all-stock-info';
-import { SharedDataService } from 'src/app/shared/services/shared-data.service';
 @Component({
   selector: 'app-stock-ticker',
   templateUrl: './stock-ticker.component.html',
@@ -12,13 +12,13 @@ export class StockTickerComponent implements OnInit {
 
   @Input('stockSymbol') stockSymbol: string = '';
 
-  stockInformation!: Partial<IAllStockInfo>;
+  stockInformation!: Partial<IAllStockInfo> | null;
   errorText: string = '';
 
   isLoading: boolean = false;
 
   constructor(
-    private sharedDataService: SharedDataService,
+    private httpService: HttpService,
     private router: Router
   ) { }
 
@@ -30,10 +30,10 @@ export class StockTickerComponent implements OnInit {
 
   getStockInformation() {
     this.isLoading = true;
-    this.stockInformation = {};
+    this.stockInformation = null;
     this.errorText = '';
 
-    this.sharedDataService.getAllStockInfo(this.stockSymbol)
+    this.httpService.getAllStockInfo(this.stockSymbol)
       .subscribe((response: IAllStockInfo | null) => {
         this.isLoading = false;
 

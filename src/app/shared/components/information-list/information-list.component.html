@@ -4,7 +4,12 @@
     class="content"
     [ngClass]="getClass()">
     <span>{{gridInfo.title | uppercase}}</span>
-    <span [innerHTML]="parseContent(gridInfo)"></span>
+    <span *ngIf="!showTags(gridInfo)" [innerHTML]="parseContent(gridInfo)"></span>
+    <span *ngIf="showTags(gridInfo)">
+      <div class="badge badge-light" *ngFor="let tag of gridInfo?.content">
+        {{tag}}
+      </div>
+    </span>
   </div>
 </div>
 

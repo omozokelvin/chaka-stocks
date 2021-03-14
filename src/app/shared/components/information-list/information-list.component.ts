@@ -28,6 +28,10 @@ export class InformationListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  showTags(gridInfo: IGridInfo): boolean {
+    return gridInfo.options?.isTag && Array.isArray(gridInfo.content);
+  }
+
   parseContent(gridInfo: IGridInfo): string {
 
     const { content, options } = gridInfo;
@@ -56,10 +60,10 @@ export class InformationListComponent implements OnInit {
 
     if(isValidDate(content as string)) {
       if(options?.quarterlyDate) {
-        return this.quarterlyDatePipe.transform(content) as string;
+        return this.quarterlyDatePipe.transform(content as string) as string;
       }
 
-      return this.datePipe.transform(content, 'mediumDate') as string;
+      return this.datePipe.transform(content as string, 'mediumDate') as string;
     }
 
     return content ? content as string : '-';

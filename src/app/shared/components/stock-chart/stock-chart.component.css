@@ -2,11 +2,3 @@
   width: 90%;
   position: relative;
 }
-
-#empty-div {
-  border: 1px solid red;
-}
-
-#empty-div img {
-  width: 5rem;
-}

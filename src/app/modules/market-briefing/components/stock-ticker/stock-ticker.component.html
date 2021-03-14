@@ -2,8 +2,10 @@
   <div class="loading-template d-flex justify-content-center align-items-center flex-column">
     <app-loading *ngIf="isLoading"></app-loading>
 
-    <img *ngIf="!isLoading" class="w-50" src="/assets/images/icons/empty.svg">
-    <p *ngIf="!isLoading" class="p-2" [appMutedText]="'0.7rem'">{{errorText}}</p>
+    <app-empty-data
+      class="text-center"
+      *ngIf="!isLoading && errorText"
+      [errorText]="errorText"></app-empty-data>
   </div>
 </ng-template>
 
@@ -13,9 +15,13 @@ else loadingTemplate"
   class="card"
   (click)="onStockClick()">
   <div class="card-body">
-    <h4 class="card-title font-weight-bold mb-0">{{stockInformation?.globalQuote?.symbol | uppercase}}</h4>
+    <h4 class="card-title font-weight-bold mb-0">
+      {{stockInformation?.globalQuote?.symbol | uppercase}}
+    </h4>
     <!-- <span class="card-text">Fuelcell Energy Inc</span> -->
-    <span class="card-text">{{stockInformation?.stockOverview?.Name}}</span>
+    <span class="card-text">
+      {{stockInformation?.stockOverview?.Name}}
+    </span>
   </div>
   <div class="card-footer">
     <h4 class="text-right font-weight-bold mb-0">{{stockInformation?.globalQuote?.price | number:'1.2-3'}}</h4>

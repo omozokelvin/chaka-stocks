@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { HttpService } from 'src/app/shared/http/http-service.service';
 import { IAllStockInfo } from 'src/app/shared/interfaces/all-stock-info';
 import { IGridInfo } from 'src/app/shared/interfaces/grid-info.interface';
-import { SharedDataService } from 'src/app/shared/services/shared-data.service';
 
 // var CanvasJS = require('./canvasjs.min');
 
@@ -19,12 +19,12 @@ export class StockDetailsComponent implements OnInit {
   profileData: IGridInfo[] = [];
 
   isLoading: boolean = false;
-  stockInformation!: Partial<IAllStockInfo>;
+  stockInformation!: Partial<IAllStockInfo> | null;
   errorText: string = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private sharedDataService: SharedDataService) { }
+    private httpService: HttpService) { }
 
   ngOnInit(): void {
     // this.activateRouteSnapshot.params
@@ -36,7 +36,7 @@ export class StockDetailsComponent implements OnInit {
 
   fillProfileData(stockInfo: IAllStockInfo) {
 
-    console.log(stockInfo);
+    // console.log(stockInfo);
     this.profileData = [
       {
         title: 'Exchange',
@@ -68,6 +68,18 @@ export class StockDetailsComponent implements OnInit {
       {
         title: 'Website',
         content: 'https://bionanogenomics.com/'
+      },
+      {
+        title: 'Tags',
+        content: [
+          'Health Technology',
+          'Biotechnology',
+          'Professional, Scientific and Technical Service',
+          'Testing Laboratories'
+        ],
+        options: {
+          isTag: true
+        }
       },
       {
         title: 'Volume',
@@ -136,10 +148,10 @@ export class StockDetailsComponent implements OnInit {
 
   getStockInformation() {
     this.isLoading = true;
-    this.stockInformation = {};
+    this.stockInformation = null;
     this.errorText = '';
 
-    this.sharedDataService.getAllStockInfo(this.stockSymbol)
+    this.httpService.getAllStockInfo(this.stockSymbol)
       .subscribe((response: IAllStockInfo | null) => {
         this.isLoading = false;
 
@@ -155,6 +167,8 @@ export class StockDetailsComponent implements OnInit {
         // console.log(this.stockInformation);
 
       }, (error: HttpErrorResponse) => {
+
+        console.log('here');
         this.isLoading = false;
         this.errorText = `Could not fetch data for ${this.stockSymbol.toUpperCase()}`;
         console.log('error occurred');

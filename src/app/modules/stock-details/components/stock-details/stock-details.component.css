@@ -10,3 +10,7 @@
 img {
   width: 1.5rem;
 }
+
+.loading-template {
+  min-height: 80vh;
+}

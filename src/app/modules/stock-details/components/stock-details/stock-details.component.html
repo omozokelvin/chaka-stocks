@@ -1,52 +1,69 @@
-<div class="row mb-4 d-flex justify-content-between align-items-center">
+<ng-template #loadingTemplate>
+  <div class="loading-template d-flex justify-content-center align-items-center flex-column">
+    <app-loading *ngIf="isLoading"></app-loading>
 
-  <div>
-    <h2>{{stockInformation?.stockOverview?.Name}} <span class="font-weight-normal">({{stockInformation?.stockOverview?.Symbol}})</span></h2>
-    <h3 class="stock-price mb-0">{{stockInformation?.globalQuote?.price}} <span class="text-success font-weight-normal">{{stockInformation?.globalQuote?.change | formatPercent:'1.2-3':true }}({{stockInformation?.globalQuote?.change | formatPercent:'1.2-3'}})</span></h3>
-    <small [appMutedText]="'0.8rem'">IES real time price as of {{todaysDate | date:'mediumTime'}}</small>
+    <app-empty-data *ngIf="!isLoading && errorText" [errorText]="errorText"></app-empty-data>
   </div>
-  <div>
-    <img src="/assets/images/icons/star-blue-outline.png">
-  </div>
+</ng-template>
 
-</div>
+<div class="wrapper" *ngIf="!isLoading && !!stockInformation; else loadingTemplate">
+  <div class="row mb-4 d-flex justify-content-between align-items-center">
 
-<div class="row mb-5 text-right">
-  <div class="col">
-    <small [appMutedText]="'0.7rem'">Previous Close</small>
-    <br>
-    <strong>{{stockInformation?.globalQuote?.previousClose | number:'1.2-3'}}</strong>
-  </div>
-</div>
-
-<div class="row mb-5">
-  <div class="col-12">
-    <app-stock-details-charts [stockSymbol]="stockSymbol"></app-stock-details-charts>
-  </div>
-</div>
-
-<div class="row">
-
-  <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-12">
-        <h2>Profile</h2>
-        ...
-      </div>
+    <div class="col">
+      <h2>{{stockInformation?.stockOverview?.Name}} <span class="font-weight-normal">({{stockInformation?.stockOverview?.Symbol}})</span></h2>
+      <h3 class="stock-price mb-0">{{stockInformation?.globalQuote?.price}} <span class="text-success font-weight-normal">{{stockInformation?.globalQuote?.change | formatPercent:'1.2-3':true }}({{stockInformation?.globalQuote?.change | formatPercent:'1.2-3'}})</span></h3>
+      <small [appMutedText]="'0.8rem'">IES real time price as of {{todaysDate | date:'mediumTime'}}</small>
+    </div>
+    <div class="col text-right">
+      <img src="/assets/images/icons/star-blue-outline.png">
     </div>
 
-    <div class="row border-top">
-      <div class="col-md-12">
-        <app-information-list
-          [infoList]="profileData.slice(0,7)"></app-information-list>
-      </div>
+  </div>
+
+  <div class="row mb-5 text-right">
+    <div class="col">
+      <small [appMutedText]="'0.7rem'">Previous Close</small>
+      <br>
+      <strong>{{stockInformation?.globalQuote?.previousClose | number:'1.2-3'}}</strong>
     </div>
   </div>
 
-  <div class="col-md-6 border-top">
-    <app-information-list
-      [infoList]="profileData.slice(7,profileData.length)"
-      [columns]="3"></app-information-list>
+  <div class="row mb-5">
+    <div class="col-12">
+      <app-stock-details-charts [stockSymbol]="stockSymbol"></app-stock-details-charts>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Profile</h2>
+          ...
+        </div>
+      </div>
+
+      <div class="row border-top">
+        <div class="col-md-12">
+          <app-information-list
+            [infoList]="profileData.slice(0,7)"></app-information-list>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <app-information-list
+            [infoList]="profileData.slice(7,8)"></app-information-list>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 border-top">
+      <app-information-list
+        [infoList]="profileData.slice(8,profileData.length)"
+        [columns]="3"></app-information-list>
+    </div>
+
   </div>
 
 </div>

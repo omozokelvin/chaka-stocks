@@ -1,10 +1,10 @@
 
 export interface IGridInfo {
   title: string,
-  content: string | number | Date;
+  content: any
   options?: {
     prefixNumber?: boolean,
     quarterlyDate?: boolean,
-    // formatPercent?: boolean
+    isTag?: boolean
   }
 }

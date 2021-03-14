@@ -1,9 +1,9 @@
 
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { zip } from 'rxjs';
+import { HttpService } from 'src/app/shared/http/http-service.service';
 import { IStockChartData } from 'src/app/shared/interfaces/stock-chart-data.interface';
 import { SharedDataService } from 'src/app/shared/services/shared-data.service';
-import exportToCsv from 'src/app/shared/utils/exportToCSV';
 
 @Component({
   selector: 'app-stock-details-charts',
@@ -13,9 +13,11 @@ import exportToCsv from 'src/app/shared/utils/exportToCSV';
 export class StockDetailsChartsComponent implements OnInit {
   @Input('stockSymbol') stockSymbol: string = '';
 
-  activeIndex: number = 0;
+  activeIndex!: number;
 
   stockData!: IStockChartData;
+
+  //TODO: save current rangeList to localStorage;
 
   rangeList: string[] = [
     '1D',
@@ -26,14 +28,16 @@ export class StockDetailsChartsComponent implements OnInit {
     '1Y',
     '2Y',
     '5Y',
-  ]
+  ];
 
   @ViewChild('firstChartElement', { static: true }) firstChartElement: any;
   @ViewChild('secondChartElement', { static: true }) secondChartElement: any;
 
   showNavbar: boolean = false;
 
-  constructor(private sharedDataService: SharedDataService) { }
+  constructor(
+    private httpService: HttpService,
+    private sharedDataService: SharedDataService) { }
 
   ngOnInit(): void {
 
@@ -49,28 +53,13 @@ export class StockDetailsChartsComponent implements OnInit {
 
   onNavItemClick(i: number) {
     this.activeIndex = i;
+
+    this.sharedDataService.rangeUpdated.emit(this.rangeList[i]);
   }
 
-  stockDataListener(chartData: IStockChartData | null) {
-
-    if(!chartData) {
-      return;
-    }
-
-    // console.log('emitted', chartData);
-    this.stockData = chartData;
-  }
 
   downloadCSV(): void {
-
-    this.sharedDataService.downloadStockTimeSeries(this.stockSymbol);
+    this.httpService.downloadStockTimeSeries(this.stockSymbol);
   }
-
-  // ngAfterViewChecked() {
-  //   //stuff that doesn't do view changes
-  //   setTimeout(_ => {
-  //     console.log('done')
-  //   }, 0);
-  // }
 
 }
