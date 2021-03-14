@@ -1,0 +1,41 @@
+<div class="row wrapper" *ngFor="let news of newsList">
+  <div class="col-xl-3 col-md-4">
+    <img
+      class="img img-fluid"
+      [src]="news.image"
+      [alt]="news.heading">
+  </div>
+
+  <div class="col-xl-9 col-md-8">
+    <div class="row mb-1">
+      <div
+        class="col-md-12"
+        [appMutedText]="'0.7rem'">
+        {{news?.date | date:'MMM dd y, hh:mm:SS aaaaa\'m\''}}
+        |
+        {{news?.source}}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h3>{{news?.heading}}</h3>
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-md-12">
+        <p>{{news?.content | truncateWords:158:'...' }}</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        Related: <div
+          *ngFor="let tag of news.tags"
+          class="tag badge-light"> <a>{{tag}}</a> </div>
+      </div>
+    </div>
+
+  </div>
+</div>

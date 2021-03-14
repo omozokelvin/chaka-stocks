@@ -11,6 +11,8 @@ import { InformationListComponent } from './components/information-list/informat
 import { NumberPrefixPipe } from './pipes/number-prefix/number-prefix.pipe';
 import { QuarterlyDatePipe } from './pipes/quarterly-date/quarterly-date.pipe';
 import { EmptyDataComponent } from './components/empty-data/empty-data.component';
+import { TruncateWordsPipe } from './pipes/truncate-words/truncate-words.pipe';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { EmptyDataComponent } from './components/empty-data/empty-data.component
     InformationListComponent,
     NumberPrefixPipe,
     QuarterlyDatePipe,
-    EmptyDataComponent
+    EmptyDataComponent,
+    TruncateWordsPipe,
+    HeaderComponent
   ],
   imports: [
     CommonModule
@@ -41,14 +45,17 @@ import { EmptyDataComponent } from './components/empty-data/empty-data.component
     InformationListComponent,
     NumberPrefixPipe,
     QuarterlyDatePipe,
-    EmptyDataComponent
+    EmptyDataComponent,
+    TruncateWordsPipe,
+    HeaderComponent
   ],
   providers: [
     NumberPrefixPipe,
     SentenceCasePipe,
     FormatPercentPipe,
     QuarterlyDatePipe,
-    DatePipe
+    DatePipe,
+    TruncateWordsPipe
   ]
 })
 export class SharedModule { }

@@ -6,6 +6,7 @@ import localeEn from '@angular/common/locales/en';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SharedModule } from './shared/shared.module';
 
 registerLocaleData(localeEn);
 
@@ -16,7 +17,8 @@ registerLocaleData(localeEn);
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule
   ],
   providers: [DecimalPipe, { provide: LOCALE_ID, useValue: 'en' }],
   bootstrap: [AppComponent]

@@ -12,6 +12,11 @@ const routes: Routes = [
     path: 'stock-details/:symbol',
     loadChildren: () => import('./modules/stock-details/stock-details.module')
       .then(m => m.StockDetailsModule)
+  },
+  {
+    path: 'stock-news',
+    loadChildren: () => import('./modules/stock-news/stock-news.module')
+      .then(m => m.StockNewsModule)
   }
 ];
 
