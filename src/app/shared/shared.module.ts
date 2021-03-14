@@ -13,6 +13,7 @@ import { QuarterlyDatePipe } from './pipes/quarterly-date/quarterly-date.pipe';
 import { EmptyDataComponent } from './components/empty-data/empty-data.component';
 import { TruncateWordsPipe } from './pipes/truncate-words/truncate-words.pipe';
 import { HeaderComponent } from './components/header/header.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { HeaderComponent } from './components/header/header.component';
     HeaderComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   exports: [
     CommonModule,
