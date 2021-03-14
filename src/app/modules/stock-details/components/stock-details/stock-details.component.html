@@ -1,8 +1,8 @@
 <div class="row mb-4 d-flex justify-content-between align-items-center">
 
   <div>
-    <h2>Bionano Genomics Inc. <span class="font-weight-normal">(BNGO)</span></h2>
-    <h3 class="stock-price mb-0">1.36 <span class="text-success font-weight-normal">+0.46(+53.81%)</span></h3>
+    <h2>{{stockInformation?.stockOverview?.Name}} <span class="font-weight-normal">({{stockInformation?.stockOverview?.Symbol}})</span></h2>
+    <h3 class="stock-price mb-0">{{stockInformation?.globalQuote?.price}} <span class="text-success font-weight-normal">{{stockInformation?.globalQuote?.change | formatPercent:'1.2-3':true }}({{stockInformation?.globalQuote?.change | formatPercent:'1.2-3'}})</span></h3>
     <small [appMutedText]="'0.8rem'">IES real time price as of {{todaysDate | date:'mediumTime'}}</small>
   </div>
   <div>
@@ -15,7 +15,7 @@
   <div class="col">
     <small [appMutedText]="'0.7rem'">Previous Close</small>
     <br>
-    <strong>0.884</strong>
+    <strong>{{stockInformation?.globalQuote?.previousClose | number:'1.2-3'}}</strong>
   </div>
 </div>
 

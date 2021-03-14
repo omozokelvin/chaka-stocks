@@ -2,6 +2,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { zip } from 'rxjs';
 import { IStockChartData } from 'src/app/shared/interfaces/stock-chart-data.interface';
+import { SharedDataService } from 'src/app/shared/services/shared-data.service';
 import exportToCsv from 'src/app/shared/utils/exportToCSV';
 
 @Component({
@@ -32,7 +33,7 @@ export class StockDetailsChartsComponent implements OnInit {
 
   showNavbar: boolean = false;
 
-  constructor() { }
+  constructor(private sharedDataService: SharedDataService) { }
 
   ngOnInit(): void {
 
@@ -50,19 +51,19 @@ export class StockDetailsChartsComponent implements OnInit {
     this.activeIndex = i;
   }
 
-  stockDataListener(chartData: IStockChartData) {
+  stockDataListener(chartData: IStockChartData | null) {
+
+    if(!chartData) {
+      return;
+    }
+
     // console.log('emitted', chartData);
     this.stockData = chartData;
   }
 
   downloadCSV(): void {
 
-    const rows: string[][] = [
-      this.stockData.dailyTimeSeries
-        .map(item => Object.values(item)) as []
-    ];
-
-    exportToCsv('kelvin', rows)
+    this.sharedDataService.downloadStockTimeSeries(this.stockSymbol);
   }
 
   // ngAfterViewChecked() {

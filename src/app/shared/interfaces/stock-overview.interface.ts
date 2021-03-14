@@ -1,4 +1,4 @@
-interface IStockOverview {
+export interface IStockOverview {
   Symbol: string;
   AssetType: string;
   Name: string;

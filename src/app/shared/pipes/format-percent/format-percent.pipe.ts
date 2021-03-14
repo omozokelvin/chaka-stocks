@@ -7,20 +7,24 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FormatPercentPipe implements PipeTransform {
   constructor(private decimalPipe: DecimalPipe) { }
 
-  transform(value: any, format?: string): string {
+  transform(value: any, format?: string, hidePercent?: boolean): string {
 
     if(typeof value !== 'number') {
       return '';
     }
 
-    const numberFormat: string = format ? format : '1.2-2';
+    const numberFormat: string = format ?
+      format as string :
+      '1.2-2';
 
-    let stringValue = this.decimalPipe.transform(value, numberFormat);
+    const stringValue = this.decimalPipe.transform(value, numberFormat);
+
+    const percentage = hidePercent ? '' : '%';
 
     if(value > 0) {
-      return `+${stringValue}%`;
+      return `+${stringValue + percentage}`;
     }
 
-    return `${stringValue}%`;
+    return `${stringValue + percentage}`;
   }
 }

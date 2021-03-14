@@ -7,7 +7,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class NumberPrefixPipe implements PipeTransform {
 
   transform(input: number, args?: number): string | number | null {
-    const suffixes = ['K', 'M', 'G', 'T', 'P', 'E'];
+    const suffixes = ['K', 'M', 'B', 'T', 'P', 'E'];
 
     if(Number.isNaN(input)) {
       return null;

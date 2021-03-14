@@ -9,7 +9,7 @@ const routes: Routes = [
       .then(m => m.MarketBriefingModule)
   },
   {
-    path: 'stock-details',
+    path: 'stock-details/:symbol',
     loadChildren: () => import('./modules/stock-details/stock-details.module')
       .then(m => m.StockDetailsModule)
   }

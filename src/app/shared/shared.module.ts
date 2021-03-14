@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MutedTextDirective } from './directives/muted-text/muted-text.directive';
 import { SoftBoxShadowDirective } from './directives/soft-box-shadow/soft-box-shadow.directive';
 import { SpacedHeaderDirective } from './directives/spaced-header/spaced-header.directive';
@@ -8,7 +8,9 @@ import { SentenceCasePipe } from './pipes/sentence-case/sentence-case.pipe';
 import { LoadingComponent } from './components/loading/loading.component';
 import { StockChartComponent } from './components/stock-chart/stock-chart.component';
 import { InformationListComponent } from './components/information-list/information-list.component';
-import { NumberPrefixPipe } from './pipes/number-prefix.pipe';
+import { NumberPrefixPipe } from './pipes/number-prefix/number-prefix.pipe';
+import { QuarterlyDatePipe } from './pipes/quarterly-date/quarterly-date.pipe';
+
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { NumberPrefixPipe } from './pipes/number-prefix.pipe';
     LoadingComponent,
     StockChartComponent,
     InformationListComponent,
-    NumberPrefixPipe
+    NumberPrefixPipe,
+    QuarterlyDatePipe
   ],
   imports: [
     CommonModule
@@ -35,8 +38,15 @@ import { NumberPrefixPipe } from './pipes/number-prefix.pipe';
     LoadingComponent,
     StockChartComponent,
     InformationListComponent,
-    NumberPrefixPipe
+    NumberPrefixPipe,
+    QuarterlyDatePipe
   ],
-  providers: [NumberPrefixPipe]
+  providers: [
+    NumberPrefixPipe,
+    SentenceCasePipe,
+    FormatPercentPipe,
+    QuarterlyDatePipe,
+    DatePipe
+  ]
 })
 export class SharedModule { }

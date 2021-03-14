@@ -1,7 +1,10 @@
-import { DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { IGridInfo } from '../../interfaces/grid-info.interface';
-import { NumberPrefixPipe } from '../../pipes/number-prefix.pipe';
+import { FormatPercentPipe } from '../../pipes/format-percent/format-percent.pipe';
+import { NumberPrefixPipe } from '../../pipes/number-prefix/number-prefix.pipe';
+import { QuarterlyDatePipe } from '../../pipes/quarterly-date/quarterly-date.pipe';
+import isValidDate from '../../utils/isValidDate';
 import validURL from '../../utils/isValidUrl';
 
 @Component({
@@ -16,21 +19,33 @@ export class InformationListComponent implements OnInit {
 
   constructor(
     private numberPrefixPipe: NumberPrefixPipe,
-    private decimalPipe: DecimalPipe) { }
+    private decimalPipe: DecimalPipe,
+    private quarterlyDatePipe: QuarterlyDatePipe,
+    private datePipe: DatePipe,
+    private formatPercentPipe: FormatPercentPipe
+  ) { }
 
   ngOnInit(): void {
   }
 
-  parseContent(content: string | number): string {
+  parseContent(gridInfo: IGridInfo): string {
+
+    const { content, options } = gridInfo;
+
     if(typeof content === 'number') {
       if(content === 0) {
         return '...'
       }
 
       //does not have decimal place but greater than 1m
-      if(!Number.isInteger(content) && content > 1000000) {
+      // if(!Number.isInteger(content) && content > 1000000 || options?.prefixNumber) {
+      if(options?.prefixNumber) {
         return this.numberPrefixPipe.transform(content, 3) as string;
       }
+
+      // if(options?.formatPercent) {
+      //   return this.formatPercentPipe.transform(content, '1.2-3')
+      // }
 
       return this.decimalPipe.transform(content, '1.0-3') as string
     }
@@ -39,7 +54,15 @@ export class InformationListComponent implements OnInit {
       return `<a href=${content}>${content}</a>`;
     }
 
-    return content ? content : '-';
+    if(isValidDate(content as string)) {
+      if(options?.quarterlyDate) {
+        return this.quarterlyDatePipe.transform(content) as string;
+      }
+
+      return this.datePipe.transform(content, 'mediumDate') as string;
+    }
+
+    return content ? content as string : '-';
   }
 
   getClass(): string {

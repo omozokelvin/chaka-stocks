@@ -2,8 +2,17 @@
   <app-loading></app-loading>
 </div>
 
+
+<div id="empty-div" *ngIf="isLoaded && errorText" class="d-flex justify-content-center align-items-center flex-column">
+  <img src="/assets/images/icons/empty.svg">
+  <p class="p-2" [appMutedText]="'0.7rem'">{{errorText}}</p>
+</div>
+
+
+
 <div
   [hidden]="showLoading"
+  *ngIf="!errorText"
   [ngStyle]="{
   'border-bottom':showBottomBorder ? 
   '1px dashed #67c196' : 

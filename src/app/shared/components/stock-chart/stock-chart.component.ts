@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Chart, ChartType } from 'chart.js';
 import { IStockChartData } from 'src/app/shared/interfaces/stock-chart-data.interface';
 import { SharedDataService } from '../../services/shared-data.service';
@@ -13,6 +14,7 @@ import { AsyncInitializedComponent } from '../../utils/AsyncInitialized';
 export class StockChartComponent extends AsyncInitializedComponent implements AfterViewInit {
 
   showLoading: boolean = true;
+  isLoaded: boolean = false;
 
   @Input('stockSymbol') stockSymbol: string = '';
 
@@ -20,11 +22,11 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
   @Input('height') height: string = '150px';
   @Input('showBottomBorder') showBottomBorder: boolean = false;
 
-  @Output() stockDataEmitter = new EventEmitter<IStockChartData>();
-
   @ViewChild('chartDiv') chartDiv!: ElementRef;
 
   stockChart: any;
+
+  errorText: string = '';
 
   constructor(private sharedDataService: SharedDataService) {
     super();
@@ -34,17 +36,30 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
     this.fetchTimeSeries();
   }
 
+  private doneLoading(): void {
+    this.showLoading = false;
+    this.componentLoaded();
+  }
+
   fetchTimeSeries(): void {
+    this.errorText = '';
 
     this.sharedDataService
       .getStockTimeSeries(this.stockSymbol)
-      .subscribe((response: IStockChartData) => {
+      .subscribe((response: IStockChartData | null) => {
+        this.isLoaded = true;
 
-        // console.log(this.showLoading);
-
-        this.stockDataEmitter.emit(response)
+        if(!response) {
+          this.doneLoading();
+          this.errorText = 'Failed to get chart info';
+          return;
+        }
 
         this.extractChartData(response);
+
+      }, (error: HttpErrorResponse) => {
+        this.isLoaded = true;
+        this.errorText = 'Failed to get chart info';
       })
   }
 
@@ -179,9 +194,7 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
       }
     });
 
-    this.showLoading = false;
-
-    this.componentLoaded();
+    this.doneLoading();
   }
 
   ngOnDestroy(): void {

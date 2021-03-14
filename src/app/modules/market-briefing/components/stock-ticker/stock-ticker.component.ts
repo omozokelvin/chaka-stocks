@@ -2,8 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAllStockInfo } from 'src/app/shared/interfaces/all-stock-info';
-import { MarketBriefingService } from '../../services/market-briefing.service';
-
+import { SharedDataService } from 'src/app/shared/services/shared-data.service';
 @Component({
   selector: 'app-stock-ticker',
   templateUrl: './stock-ticker.component.html',
@@ -19,7 +18,7 @@ export class StockTickerComponent implements OnInit {
   isLoading: boolean = false;
 
   constructor(
-    private marketBriefingService: MarketBriefingService,
+    private sharedDataService: SharedDataService,
     private router: Router
   ) { }
 
@@ -34,9 +33,13 @@ export class StockTickerComponent implements OnInit {
     this.stockInformation = {};
     this.errorText = '';
 
-    this.marketBriefingService.getAllStockInfo(this.stockSymbol)
-      .subscribe((response: IAllStockInfo) => {
+    this.sharedDataService.getAllStockInfo(this.stockSymbol)
+      .subscribe((response: IAllStockInfo | null) => {
         this.isLoading = false;
+
+        if(!response) {
+          return;
+        }
 
         this.stockInformation = response;
 
@@ -48,7 +51,11 @@ export class StockTickerComponent implements OnInit {
   }
 
 
-  getTextClass(changePercent: number): string {
+  getTextClass(changePercent?: number): string {
+
+    if(!changePercent) {
+      return '';
+    }
 
     let textClass = '';
 
@@ -72,6 +79,6 @@ export class StockTickerComponent implements OnInit {
 
   onStockClick() {
     // console.log(this.stockSymbol);
-    this.router.navigate(['stock-details']);
+    this.router.navigate(['stock-details', this.stockSymbol]);
   }
 }
