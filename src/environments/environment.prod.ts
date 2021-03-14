@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  API_URL: 'https://www.alphavantage.co/query',
+  API_KEY: 'N9GVH09FZ5H4GHK1'
 };
