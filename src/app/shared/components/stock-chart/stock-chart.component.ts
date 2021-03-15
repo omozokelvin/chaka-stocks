@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Chart, ChartType } from 'chart.js';
+import { Subscription } from 'rxjs';
 import { IStockChartData } from 'src/app/shared/interfaces/stock-chart-data.interface';
 import { HttpService } from '../../http/http-service.service';
 import { SharedDataService } from '../../services/shared-data/shared-data.service';
@@ -12,10 +13,14 @@ import { AsyncInitializedComponent } from '../../utils/AsyncInitialized';
   styleUrls: ['./stock-chart.component.css']
 })
 
-export class StockChartComponent extends AsyncInitializedComponent implements AfterViewInit {
+export class StockChartComponent
+  extends AsyncInitializedComponent
+  implements AfterViewInit, OnDestroy {
 
   showLoading: boolean = true;
   isLoaded: boolean = false;
+
+  private stockSubscription: Subscription;
 
   @Input('stockSymbol') stockSymbol: string = '';
 
@@ -38,7 +43,7 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
   ngOnInit(): void {
     this.sharedDataService.rangeUpdated
       .subscribe((range: string) => {
-        console.log(range);
+        // console.log(range);
         this.fetchTimeSeries(range);
       })
   }
@@ -57,31 +62,60 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
     this.showLoading = true;
     this.isLoaded = false;
 
-    this.httpService
-      .getStockTimeSeries(this.stockSymbol, range)
+    //we check if we are already making the request on the service 
+    //so we don't make another request
+    //both child components use same data
+    if(!this.httpService.isFetchingTimeSeries) {
+      this.httpService.getStockTimeSeries(this.stockSymbol, range);
+    }
+
+    //we subscribe to a listener to know when stocks are updated
+    this.stockSubscription = this.httpService
+      .stockUpdated
       .subscribe((response: IStockChartData | null) => {
         this.isLoaded = true;
 
-        if(!response) {
+        if(!response.metaData) {
           this.doneLoading();
           this.errorText = 'Failed to get chart info';
           return;
         }
 
         if(!response.dailyTimeSeries || !response.dailyTimeSeries.length) {
-          console.log('here');
+          // console.log('here');
           this.doneLoading();
           this.errorText = 'No data found within date range.';
           return;
         }
 
         this.extractChartData(response, range);
-
-      }, (error: HttpErrorResponse) => {
-        this.isLoaded = true;
-        this.doneLoading();
-        this.errorText = 'Failed to get chart info';
       })
+
+    // this.httpService
+    //   .getStockTimeSeries(this.stockSymbol, range)
+    //   .subscribe((response: IStockChartData | null) => {
+    //     this.isLoaded = true;
+
+    //     if(!response) {
+    //       this.doneLoading();
+    //       this.errorText = 'Failed to get chart info';
+    //       return;
+    //     }
+
+    //     if(!response.dailyTimeSeries || !response.dailyTimeSeries.length) {
+    //       // console.log('here');
+    //       this.doneLoading();
+    //       this.errorText = 'No data found within date range.';
+    //       return;
+    //     }
+
+    //     this.extractChartData(response, range);
+
+    //   }, (error: HttpErrorResponse) => {
+    //     this.isLoaded = true;
+    //     this.doneLoading();
+    //     this.errorText = 'Failed to get chart info';
+    //   })
   }
 
   private extractChartData(response: IStockChartData, range?: string) {
@@ -93,7 +127,7 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
     const lowValues: number[] = [];
     const closeValues: number[] = [];
 
-    console.log(dailyTimeSeries);
+    // console.log(dailyTimeSeries);
 
     dailyTimeSeries.forEach(element => {
       labelData.push(element.date?.toDateString() as string);
@@ -238,6 +272,12 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
     });
 
     this.doneLoading();
+  }
+
+  ngOnDestroy() {
+    if(this.stockSubscription && !this.stockSubscription.closed) {
+      this.stockSubscription.unsubscribe();
+    }
   }
 }
 

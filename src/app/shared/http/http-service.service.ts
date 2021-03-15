@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IAllStockInfo } from '../interfaces/all-stock-info';
@@ -168,7 +168,7 @@ export class HttpService {
 
     yesterday.setDate(yesterday.getDate() - 1);
 
-    console.log(yesterday);
+    // console.log(yesterday);
 
     if(!!range) {
       const format = 'YYYY-MM-DD hh:mm:ss';
@@ -251,9 +251,21 @@ export class HttpService {
     return dailyTimeSeriesList;
   }
 
-  getStockTimeSeries(stockSymbol: string, range?: string) {
-    // stockSymbol = environment.production ? stockSymbol : 'IBM';
 
+  private _stockUpdated = new Subject<IStockChartData | null>();
+  public get stockUpdated() {
+    return this._stockUpdated.asObservable();
+  }
+
+  private _isFetchingTimeSeries = false;
+  public get isFetchingTimeSeries() {
+    return this._isFetchingTimeSeries;
+  }
+
+  getStockTimeSeries(stockSymbol: string, range?: string) {
+    //make just one api call till it's complete
+    this._isFetchingTimeSeries = true;
+    // stockSymbol = environment.production ? stockSymbol : 'IBM';
     let params = new HttpParams();
 
     params = params.append('function', 'TIME_SERIES_DAILY');
@@ -279,13 +291,17 @@ export class HttpService {
               metaData: processedMetaData,
               dailyTimeSeries
             }
-
-
             return processedTimeSeries;
           } catch(error) {
             return null;
           }
-        }))
+        })).subscribe(response => {
+          this._stockUpdated.next(response);
+          this._isFetchingTimeSeries = false;
+        }, (error) => {
+          this._stockUpdated.next(error);
+          this._isFetchingTimeSeries = false;
+        })
   }
 
   downloadStockTimeSeries(stockSymbol: string) {

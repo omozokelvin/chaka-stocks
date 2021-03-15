@@ -30,7 +30,6 @@ export class SectorTickerComponent implements OnInit {
       default:
         highlightClass = 'badge-secondary'
         break;
-
     }
 
     return highlightClass;

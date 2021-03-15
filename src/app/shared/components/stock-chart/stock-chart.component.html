@@ -1,11 +1,10 @@
-<div [ngStyle]="{'height': height}" *ngIf="showLoading">
-  <app-loading></app-loading>
-</div>
+<div [ngStyle]="{'height': height}" class="d-flex justify-content-center align-items-center flex-column">
+  <app-loading *ngIf="showLoading"></app-loading>
 
-
-<div id="empty-div" *ngIf="isLoaded && errorText" class="d-flex justify-content-center align-items-center flex-column">
-  <img src="/assets/images/icons/empty.svg">
-  <p class="p-2" [appMutedText]="'0.7rem'">{{errorText}}</p>
+  <app-empty-data
+    class="text-center"
+    *ngIf="isLoaded && errorText"
+    [errorText]="errorText"></app-empty-data>
 </div>
 
 <div
