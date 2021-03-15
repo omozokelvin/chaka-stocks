@@ -1,4 +1,4 @@
-<div [ngStyle]="{'height': height}" class="d-flex justify-content-center align-items-center flex-column">
+<div *ngIf="showLoading || (isLoaded && errorText)" [ngStyle]="{'height': height}" class="d-flex justify-content-center align-items-center flex-column">
   <app-loading *ngIf="showLoading"></app-loading>
 
   <app-empty-data
