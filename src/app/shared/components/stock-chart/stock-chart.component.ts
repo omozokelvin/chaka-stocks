@@ -210,18 +210,19 @@ export class StockChartComponent
         break;
     }
 
-    if(!!range) {
-      // this.stockChart.update();
-      this.stockChart.data.datasets = dataset;
-      this.stockChart.data.labels = labelData;
 
-      this.stockChart.update();
 
-      this.doneLoading();
-    } else {
-      this.renderChart(labelData, dataset);
-    }
+    // if(!!range) {
+    //   // this.stockChart.update();
+    //   this.stockChart.data.datasets = dataset;
+    //   this.stockChart.data.labels = labelData;
 
+    //   this.stockChart.update();
+
+    //   this.doneLoading();
+    // } else {
+    this.renderChart(labelData, dataset);
+    // }
   }
 
   renderChart(labelData: string[], dataSets: Chart.ChartDataSets[]): void {
@@ -229,6 +230,10 @@ export class StockChartComponent
 
     const chartContext = this.chartDiv.nativeElement.getContext('2d');
 
+    //to fix flickering issue
+    if(this.stockChart && this.stockChart.chart !== null) {
+      this.stockChart.destroy();
+    }
 
     this.stockChart = new Chart(chartContext, {
       type: this.chartType,
