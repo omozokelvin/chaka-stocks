@@ -30,16 +30,28 @@ a {
   img {
     padding-bottom: 1.4rem;
   }
+
+  .wrapper {
+    margin-bottom: 2rem;
+  }
 }
 
 @media (max-width: 768px) {
   img {
     padding-bottom: 1.5rem;
   }
+
+  .wrapper {
+    margin-bottom: 2.2rem;
+  }
 }
 
 @media (max-width: 576px) {
   img {
     padding-bottom: 1.2rem;
+  }
+
+  .wrapper {
+    margin-bottom: 2.4rem;
   }
 }

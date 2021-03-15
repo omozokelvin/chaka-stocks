@@ -1,12 +1,12 @@
 <div class="row wrapper" *ngFor="let news of newsList">
-  <div class="col-xl-3 col-md-4">
+  <div class="col-md-4">
     <img
       class="img img-fluid"
       [src]="news.image"
       [alt]="news.heading">
   </div>
 
-  <div class="col-xl-9 col-md-8">
+  <div class="col-md-8">
     <div class="row mb-1">
       <div
         class="col-md-12"
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="row mb-1">
+    <div class="row">
       <div class="col-md-12">
         <p>{{news?.content | truncateWords:158:'...' }}</p>
       </div>
