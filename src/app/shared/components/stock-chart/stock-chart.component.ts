@@ -203,6 +203,13 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
         datasets: dataSets,
       },
       options: {
+        animation: {
+          duration: 0 // general animation time
+        },
+        hover: {
+          animationDuration: 0 // duration of animations when hovering an item
+        },
+        responsiveAnimationDuration: 0, // animation duration after a resize
         legend: {
           display: false
         },
@@ -222,6 +229,9 @@ export class StockChartComponent extends AsyncInitializedComponent implements Af
         elements: {
           point: {
             radius: 0
+          },
+          line: {
+            tension: 0 // disables bezier curves
           }
         }
       }
