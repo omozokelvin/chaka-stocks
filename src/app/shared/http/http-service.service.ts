@@ -15,6 +15,7 @@ import { LocalStorageService } from '../services/local-storage/local-storage.ser
 @Injectable({
   providedIn: 'root'
 })
+
 export class HttpService {
 
   API_URL = environment.API_URL;
